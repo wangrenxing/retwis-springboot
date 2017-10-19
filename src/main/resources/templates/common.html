@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
+    <!--<title>Retwis-J :: a Spring Data Redis demonstration</title>-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <link rel="stylesheet" th:href="@{/static/styles/screen.css}" href="/static/styles/screen.css"
+          type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" th:href="@{/static/styles/print.css}" href="/static/styles/print.css"
+          type="text/css" media="print"/>
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" th:href="@{/static/styles/blueprint/ie.css}" href="/static/styles/blueprint/ie.css"
+          type="text/css" media="screen, projection"/>
+    <![endif]-->
+    <link rel="stylesheet" th:href="@{/static/styles/custom.css}" href="/static/styles/custom.css"
+          type="text/css" media="screen, projection"/>
+    <link rel="icon" type="image/x-ico" th:href="@{/static/images/favicon.ico}"
+          href="/static/images/favicon.ico"/>
+    <title>Retwis-J :: a Spring Data Redis demonstration</title>
+</head>
+<body>
+
+<div class="header" th:fragment="header">
+    <div class="span-15 prepend-1">
+        <h2 class="alt">
+            <a href="/" th:href="@{/}">Retwis-J</a>
+        </h2>
+    </div>
+    <div class="span-8 last right-align">
+        <div th:if="${loggedIn}">
+            <a th:href="@{'/!'+ ${loggedUser}}" th:text="#{home}">home</a> |
+            <a th:href="@{'/!'+ ${loggedUser} + '/mentions'}" th:text="'@'+${loggedUser}"></a> |
+            <a th:href="@{/logout}" th:text="#{logout}">logout</a> |
+            <a th:href="@{/timeline}" th:text="#{timeline}">timeline</a>
+        </div>
+        <div th:if="! ${loggedIn}">
+            <!-- <div class="span-7 last" id="rightcol"> -->
+            <a th:href="@{signIn}" th:text="#{signin}">signin</a>
+            <!-- </div> -->
+        </div>
+    </div>
+    <hr/>
+</div>
+
+<div class="footer" th:fragment="footer">
+    <hr/>
+    <p>
+        <span><a href="/" th:href="@{/}" th:text="#{home}">home</a> |
+        <a href="http://static.springsource.org/spring-data/data-keyvalue/examples/retwisj/current/"
+           th:text="#{docs}">docs</a> | <span th:text="#{lang}">lang</span> (<a th:href="@{'?lang=en'}">EN</a> | <a
+                    th:href="@{'?lang=es'}">ES</a> | <a th:href="@{'?lang=ro'}">RO</a> | <a
+                    th:href="@{'?lang=cn'}">CN</a>)</span>
+    </p>
+    <p>&nbsp;</p>
+    <p>
+        Retwis-J is a simple Twitter clone written in Java using <a
+            href="http://github.com/SpringSource/spring-data-redis">Spring Data</a> and <a
+            href="http://redis.io">Redis</a>.
+        The code is open-source and available on <a
+            href="https://github.com/SpringSource/spring-data-keyvalue-examples">Github</a>.
+    </p>
+    <p>Follow the team on Twitter: <a href="http://twitter.com/costinl">Costin</a>, <a
+            href="http://twitter.com/markpollack">Mark</a>, <a href="http://twitter.com/jencompgeek">Jennifer</a>
+    </p>
+    <p><a href="http://twitter.com/springsource"><img th:src="@{/static/images/springsource-logo.png}"
+                                                      src="/static/images/springsource-logo.png"
+                                                      alt="Sponsored by SpringSource"/></a></p>
+</div>
+
+<div th:fragment="network">
+    <div class="span-7 last" id="rightcol">
+        <div class="span-7 box" th:if="not ${#lists.isEmpty(in_common)}">
+            <h4 th:text="${follow.both}"></h4>
+            <ul class="user-list">
+                <a th:each="c: ${in_common}" th:href="@{'!'+${c}}" th:text="${c}"/>
+            </ul>
+        </div>
+        <div class="box">
+            <h4 th:switch="${#lists.size(followers)}">
+                <span th:case="1" th:text="#{follower}"></span>
+                <span th:case="*" th:text="#{followers} + ':' + ${#lists.size(followers)}"></span>
+            </h4>
+            <ul class="user-list">
+                <li th:each="f:${followers}">
+                    <a th:href="@{'!' + ${f}}" th:text="${f}"/>
+                </li>
+            </ul>
+            <span th:if="${more_followers}" th:text="#{and.more}"></span>
+        </div>
+        <div class="box">
+            <h4 th:text="#{following} + ': ' + ${#lists.size(following)}"></h4>
+            <ul class="user-list">
+                <li th:each="f:${following}"><a th:href="@{'!' + ${f}}" th:text="${f}"></a></li>
+            </ul>
+            <span th:if="${more_following}" th:text="#{and.more}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="posts" id="posts" class="span-15 prepend-1 append-bottom">
+    <div th:if="${#lists.isEmpty(posts)}">
+        <span th:if="${loggedIn}">
+            <i th:text="#{nopost.note}"/><i><a th:href="@{'/!' + ${loggedUser} + '?replyto=costinl'}">@costinl</a> ?</i>
+        </span>
+        <i th:if="! ${loggedIn}" th:text="#{nopost}"></i>
+    </div>
+    <div th:if="${not #lists.isEmpty(posts)}" th:include="common::post"/>
+    <div th:if="${moreposts}" class="span-2 box" align="center">
+        <a th:href="@{'?page='+${page}}" th:text="#{more}"/>
+    </div>
+</div>
+
+<div th:fragment="post">
+    <div th:each="p:${posts}">
+        <hr/>
+        <div class="post">
+            <p>
+                <a class="user" th:href="@{'/!'+${p.name}}"><b th:text="${p.name}"/></a>
+                <span th:utext="${p.content}"/>
+                <br/>
+                <!-- link to post -->
+                <a th:href="@{/status(pid=${p.pid})}"><span th:text="${#messages.msg(p.time, p.timeArg)}"/></a>
+                <!-- reply connection -->
+                <a th:if="${! #strings.isEmpty(p.replyPid)}" th:href="@{/status(pid=${p.replyPid})}">
+                    <span th:text="#{inreplyto}"/><span th:text="| ${p.replyTo}|"/></a>
+                &nbsp;&nbsp;&nbsp;
+                <a th:if="${loggedIn}" th:href="@{'/!'+${loggedUser}(replyto=${p.name},replypid=${p.pid})}">
+                    <span th:text="#{reply}"/>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="userFollow">
+    <div class="box" th:switch="${follows}">
+        <a th:case="true" th:href="@{'/!'+${name}+'/stopfollowing'}"
+           th:text="#{follow.stop}"/>
+        <a th:case="false" th:href="@{'/!'+${name}+'/follow'}"
+           th:text="#{follow}"/>
+        <span th:if="! ${no_mentions}"> |
+            <a th:href="@{'/!'+${name}+'/mentions'}" th:text="#{Mentions}"/>
+        </span>
+    </div>
+
+    <div class="box" th:if="! ${#lists.isEmpty(also_followed)}">
+        <span th:text="#{follow.also}"/> :
+        <a th:each="f:${also_followed}" th:href="@{'/!'+${f}}" th:text="${f}"/>
+    </div>
+</div>
+</body>
+</html>

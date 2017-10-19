@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::head">
+</head>
+<body>
+<div class="container">
+    <div th:replace="common::header"/>
+    <div class="span-15" id="maincol" th:include="common::posts"/>
+
+    <!--
+    <c:if test="${!loggedIn}">
+     <div class="span-7 last" id="rightcol">
+      <a href="signIn"><fmt:message key="signin"/></a>
+      </div>
+    </c:if>
+    <c:if test="${!loggedIn}">
+     <div class="span-7" id="rightcol">
+      <a href="timeline"><fmt:message key="timeline"/></a>
+      </div>
+    </c:if>
+     -->
+    <div th:replace="common::footer"/>
+</div>
+</body>
+</html>

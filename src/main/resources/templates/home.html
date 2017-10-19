@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::head">
+</head>
+<body>
+<div class="container">
+
+    <div th:replace="common::header"/>
+
+    <div class="span-24 prepend-1 last">
+        <h2 class="alt" th:if="${#strings.equals(loggedUser, name)}"
+            th:text="#{welcome}+' ' +${name}">
+        </h2>
+    </div>
+    <div class="span-15 prepend-1" th:switch="${loggedUser}">
+        <div th:case="${name}" id="updateform" class="box">
+            <form method="post" th:action="@{'!' + ${name}}">
+                <div th:unless="${#strings.isEmpty(replyTo)}">
+                    <span th:text="#{replyto}"/>
+                    <i th:text="| ${replyTo}|"></i>:
+                </div>
+                <div th:if="${#strings.isEmpty(replyTo)}">
+                    <b><i th:text="${name}"></i></b>,
+                    <span th:text="#{wazza}"/>
+                </div>
+                <textarea name="content" rows="3" cols="60"
+                          th:text="${replyTo}?'@'+${replyTo}"/>
+                <br/>
+                <input type="hidden" name="replyTo" th:value="${replyTo}"/>
+                <input type="hidden" name="replyPid" th:value="${replyPid}"/>
+                <input type="submit" th:value="#{update}"/>
+            </form>
+        </div>
+        <div th:case="*" th:if="${loggedIn}" th:include="common::userFollow"/>
+    </div>
+    <div th:replace="common::posts"/>
+    <div th:replace="common::network"/>
+    <div th:replace="common::footer"/>
+
+</div>
+</body>
+</html>

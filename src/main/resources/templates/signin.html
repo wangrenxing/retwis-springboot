@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::head">
+</head>
+<body>
+<div class="container">
+    <div th:replace="common::header"/>
+
+    <h2 th:text="#{welcome}"/>
+
+    <div class="span-11 box">
+        <h2 th:text="#{signin}"/>
+
+        <form action="signIn" method="post">
+            <div th:if="${errorpass}" class="error">
+                <span th:text="#{error.pass}"/>
+            </div>
+
+            <table>
+                <tr>
+                    <td th:text="#{username}"/>
+                    <td><input name="name" /></td>
+                </tr>
+                <tr>
+                    <td th:text="#{password}"/>
+                    <td><input type="password" name="pass"/></td>
+                </tr>
+            </table>
+            <input type="submit" th:value="#{signin}"/>
+
+        </form>
+    </div>
+
+    <div class="span-11 box last">
+        <h2 th:text="#{signup}"/>
+
+        <div th:if="${errorduplicateuser}" class="error">
+            <span th:text="#{error.duplicateuser}"/>
+        </div>
+
+        <div th:if="${errormatch}" class="error">
+            <span th:text="#{error.match}"/>
+        </div>
+
+        <form action="signUp" method="post">
+            <table>
+                <tr>
+                    <td th:text="#{username}"/>
+                    <td><input  name="name"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{password}"/>
+                    <td><input  type="password" name="pass"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{password.again}"/>
+                    <td><input type="password" name="pass2"/></td>
+                </tr>
+            </table>
+            <input type="submit" th:value="#{signup}"/>
+        </form>
+    </div>
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <div th:replace="common::footer"/>
+</div>
+</body>
+</html>

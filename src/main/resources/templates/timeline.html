@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common::head">
+</head>
+<body>
+<div class="container">
+    <div th:include="common::header"/>
+
+    <div class="span-24 prepend-1 last">
+        <h2 class="alt" th:text="#{timeline}"></h2>
+    </div>
+    <div class="span-15 prepend-1">
+        <p th:text="#{all.posts}"></p>
+    </div>
+    <br/>
+
+    <div th:replace="common::posts"/>
+
+
+    <div class="span-7 last" id="rightcol">
+        <div class="span-7 box">
+            <h4 th:text="#{newusers}"></h4>
+            <a th:each="u:${users}" th:href="@{'!'+${u}}" th:text="${u}"></a>
+        </div>
+    </div>
+</div>
+<div th:replace="common::footer"/>
+
+</body>
+</html>
