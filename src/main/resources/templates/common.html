@@ -83,7 +83,7 @@
             </h4>
             <ul class="user-list">
                 <li th:each="f:${followers}">
-                    <a th:href="@{'!' + ${f}}" th:text="${f}"/>
+                    <a th:href="@{'/!' + ${f}}" th:text="${f}"/>
                 </li>
             </ul>
             <span th:if="${more_followers}" th:text="#{and.more}"></span>
@@ -91,7 +91,7 @@
         <div class="box">
             <h4 th:text="#{following} + ': ' + ${#lists.size(following)}"></h4>
             <ul class="user-list">
-                <li th:each="f:${following}"><a th:href="@{'!' + ${f}}" th:text="${f}"></a></li>
+                <li th:each="f:${following}"><a th:href="@{'/!' + ${f}}" th:text="${f}"></a></li>
             </ul>
             <span th:if="${more_following}" th:text="#{and.more}"></span>
         </div>
