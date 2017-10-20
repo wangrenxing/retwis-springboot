@@ -168,10 +168,6 @@ public class RetwisController {
 
 		model.addAttribute("followers", retwis.getFollowers(targetUid));
 		model.addAttribute("following", retwis.getFollowing(targetUid));
-		Collection<String> fs = retwis.getFollowing(targetUid);
-		for( String f : fs ) {
-			System.out.println("===== f:  " + f);
-		}
 
 		if (RetwisSecurity.isSignedIn() && !targetUid.equals(RetwisSecurity.getUid())) {
 			model.addAttribute("also_followed", retwis.alsoFollowed(RetwisSecurity.getUid(), targetUid));
